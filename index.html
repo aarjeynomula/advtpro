@@ -204,7 +204,6 @@
 
             <!-- Add Section Button -->
             <div style="position: relative; margin-top: 15px;">
-                <button class="global-add-btn" onclick="saveAsDefault()" style="margin-bottom: 8px; background: #f0f9ff; border-color: #bae6fd; color: #0369a1;">💾 Save Current as Default</button>
                 <button class="global-add-btn" onclick="toggleGlobalAddMenu(event)">➕ Add New Section</button>
                 <div class="add-menu" id="globalAddMenu" style="bottom: 100%; top: auto; width: 100%; left: 0; margin-bottom: 5px;">
                     <button onclick="addBlockAtEnd('heading'); toggleGlobalAddMenu();">📝 Heading</button>
@@ -646,11 +645,13 @@
                 } else {
                     el.contentEditable = "true";
                     el.innerHTML = block.text;
-                    el.style.fontFamily = `"${block.font}", sans-serif`;
+		    // Adds fallback fonts for Android (Roboto) and iPhone (Helvetica)
+                    el.style.fontFamily = block.font === 'Arial Black' ? '"Arial Black", "Roboto", "Helvetica Neue", system-ui, sans-serif' : `"${block.font}", sans-serif`;
                     el.style.fontSize = `${block.size}pt`;
                     el.style.lineHeight = '1.2';
                     el.style.textTransform = block.caps ? 'uppercase' : 'none';
-                    el.style.fontWeight = block.bold ? 'bold' : 'normal';
+		    // Forces maximum thickness (900) on mobile if Arial Black is selected
+                    el.style.fontWeight = block.font === 'Arial Black' ? '900' : (block.bold ? 'bold' : 'normal');
                     
                     if (block.align === 'justify') { el.style.textAlign = 'justify'; el.style.textAlignLast = 'left'; } 
                     else { el.style.textAlign = block.align; }
